@@ -1,0 +1,90 @@
+/* Name			: Nancy Soni
+Email: nhsoni@myseneca.ca
+Student ID : 166541193
+course : OOP345
+*/
+
+/*
+I have done all the coding by myself and only copied the code
+that my professor provided to complete my workshops and assignments.
+*/
+
+
+#include "Utilities.h"
+#include "Station.h"
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+namespace sdds{
+	size_t Station::m_widthField = 0;
+	size_t Station::id_generator = 0;
+
+	Station::Station(const string& src)
+	{
+		
+Utilities uti;
+		size_t next_pos = 0;
+		bool more = false;
+		d_identity= ++Station::id_generator;
+		if (src.empty()){
+			d_product = "";
+			d_productnumber = 0;
+			d_amount= 0;
+}
+		else
+		{
+			
+d_product= uti.extractToken(src, next_pos, more);
+			if (more){
+					string tmp = uti.extractToken(src, next_pos, more);
+			d_productnumber = atoi(tmp.c_str());
+					}
+			if (more){
+					string tmp = uti.extractToken(src, next_pos, more);
+			d_amount= atoi(tmp.c_str());
+					}
+			if (m_widthField < uti.getFieldWidth())
+			{m_widthField = uti.getFieldWidth();}
+			if (more)
+			{
+				d_description= uti.extractToken(src, next_pos, more);}
+			}
+	
+}
+
+	const string& Station::getItemName() const
+	{
+		return d_product;
+	}
+	size_t Station::getNextSerialNumber()
+	{
+		return d_productnumber++;
+	}
+	size_t Station::getQuantity() const
+	{
+		return d_amount;
+	}
+	void Station::updateQuantity()
+	{if (d_amount> 0)
+		d_amount--;}
+		
+	
+void sdds::Station::display(std::ostream& os, bool full) const
+    {
+ 
+        os << "[" << setw(WIDTH_ID) << setfill('0') << right << d_identity<< "] "
+            << "Item: "
+            << std::setw(m_widthField) << setfill(' ') << std::left <<getItemName()
+            << " [" << std::setw(6) << std::right << std::setfill('0') << d_productnumber<< std::setfill(' ') << "]";
+ 
+        if (full)
+            os << " Quantity: " << std::setw(m_widthField) << std::left << getQuantity()
+            << " Description: " << d_description;
+ 
+        os << std::endl;
+ 
+        }
+
+
+    }

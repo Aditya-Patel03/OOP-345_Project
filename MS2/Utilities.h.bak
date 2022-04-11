@@ -1,0 +1,34 @@
+/* Name			: Nancy Soni
+Email: nhsoni@myseneca.ca
+Student ID : 166541193
+course : OOP345
+*/
+
+/*
+I have done all the coding by myself and only copied the code
+that my professor provided to complete my workshops and assignments.
+*/
+
+
+#ifndef UTILITIES_H
+#define UTILITIES_H
+#include <iostream>
+#include <string>
+
+namespace sdds{
+class Utilities
+{
+	 size_t m_widthField = 0;
+          static char m_delimiter;
+public:
+	
+	std::string extractToken(const std::string& str, size_t& next_pos, bool& more);
+
+	static void setDelimiter(char newDelimiter);
+	void setFieldWidth(size_t newWidth);
+	size_t getFieldWidth() const;
+	static char getDelimiter();
+};
+}
+
+#endif

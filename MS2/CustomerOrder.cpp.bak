@@ -1,0 +1,122 @@
+/* Name			: Nancy Soni
+Email: nhsoni@myseneca.ca
+Student ID : 166541193
+course : OOP345
+*/
+
+/*
+I have done all the coding by myself and only copied the code
+that my professor provided to complete my workshops and assignments.
+*/
+#include <iomanip>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <vector>
+#include "Utilities.h"
+#include "CustomerOrder.h"
+#include "Station.h"
+using namespace std;
+namespace sdds {
+
+size_t CustomerOrder::m_widthField = 0;
+CustomerOrder::CustomerOrder() {}
+CustomerOrder::CustomerOrder(const std::string& src)
+{   Utilities uti;
+   size_t next_pos = 0;
+    bool more = false;
+
+if (src.empty())
+{
+m_name = "";
+m_product = "";
+m_cntItem = 0;
+m_lstItem = nullptr;
+}
+else
+{  m_name = uti.extractToken(src, next_pos, more);
+if (more) {
+     m_product = uti.extractToken(src, next_pos, more);}
+std::string strItems = src.substr(next_pos, src.length() - next_pos);
+m_cntItem = (std::count(strItems.begin(), strItems.end(), uti.getDelimiter())) + 1;
+m_lstItem = new Item*[m_cntItem];
+for(size_t x = 0u; x < m_cntItem && more; x++)
+m_lstItem[x] = new Item(uti.extractToken(src, next_pos, more));
+if (m_widthField < uti.getFieldWidth())
+    m_widthField = uti.getFieldWidth();
+  }
+}
+CustomerOrder::~CustomerOrder()
+{
+   for (auto z = 0u; z < m_cntItem; ++z)
+        delete m_lstItem[z];
+     delete[] m_lstItem;}
+CustomerOrder::CustomerOrder(CustomerOrder&)
+{throw "ERROR:  Copy is not allowed!";
+}
+CustomerOrder::CustomerOrder(CustomerOrder&& cop) noexcept
+{*this = std::move(cop);}
+CustomerOrder& CustomerOrder::operator=(CustomerOrder&& cop) noexcept
+{
+if (this != &cop)
+{
+        for (auto z = 0u; z < m_cntItem; ++z)
+            delete m_lstItem[z];
+        delete[] m_lstItem;
+        m_name = cop.m_name;
+        m_product = cop.m_product;
+        m_cntItem = cop.m_cntItem;
+        m_lstItem = cop.m_lstItem;
+        cop.m_cntItem = 0;
+        cop.m_lstItem = nullptr;}
+return *this;}
+bool CustomerOrder::isFilled() const
+{
+bool completeBlank = true;
+   for (unsigned int z = 0; z < m_cntItem; z++)
+    {
+        if (!m_lstItem[z]->m_isFilled)
+            completeBlank = false;}
+     return completeBlank;}
+bool CustomerOrder::isItemFilled(const std::string& Itname) const
+{
+    for (unsigned int y = 0; y < m_cntItem; y++)
+    {
+       if (m_lstItem[y]->m_itemName == Itname)
+          return m_lstItem[y]->m_isFilled;}
+   return true;}
+void CustomerOrder::fillItem(Station& st, std::ostream& os)
+{
+for (unsigned int x = 0; x < m_cntItem; x++)
+{
+   if (m_lstItem[x]->m_itemName == st.getItemName())
+   {
+     if (st.getQuantity() > 0)
+        {m_lstItem[x]->m_serialNumber = st.getNextSerialNumber();
+           m_lstItem[x]->m_isFilled = true;
+           st.updateQuantity();
+           os << "    Filled " << m_name << ", " << m_product << " [" << m_lstItem[x]->m_itemName << "]" << std::endl;
+         }
+         else
+         {
+          os << "    Unable to fill " << m_name << ", " << m_product << " [" << m_lstItem[x]->m_itemName << "]" << std::endl; }
+       }
+  }
+}  
+void CustomerOrder::display(std::ostream& os) const
+{
+   os << m_name << " - " << m_product << std::endl;
+  for (unsigned int z = 0; z < m_cntItem; z++)
+   { 
+    os << "[" << setw(WIDTH_CODE) << setfill('0') << right << m_lstItem[z]->m_serialNumber << "] "
+            << setfill(' ') << setw(m_widthField) << left << m_lstItem[z]->m_itemName << " - ";
+     if (m_lstItem[z]->m_isFilled){
+       os << "FILLED" << std::endl;
+     }
+     else
+       {
+         os << "TO BE FILLED" << std::endl;
+       }
+}
+}
+}

@@ -1,0 +1,66 @@
+/* Name			: Nancy Soni
+Email: nhsoni@myseneca.ca
+Student ID : 166541193
+course : OOP345
+*/
+
+/*
+I have done all the coding by myself and only copied the code
+that my professor provided to complete my workshops and assignments.
+*/
+
+
+#include "Utilities.h"
+
+namespace sdds{
+        char Utilities::m_delimiter;
+	
+	void Utilities::setDelimiter(char newDelimiter)
+
+	{m_delimiter = newDelimiter;}
+
+
+	char Utilities::getDelimiter()
+
+	{return m_delimiter;}
+
+
+	void Utilities::setFieldWidth(size_t w)
+
+	{m_widthField = w;}
+
+
+	size_t Utilities::getFieldWidth() const 
+
+	{return m_widthField;}
+
+
+	std::string Utilities::extractToken(const std::string& str, size_t& next_pos, bool& more)
+	{
+		std::string re;
+
+		if (next_pos <= str.length())
+		{
+			size_t pos=str.find_first_of(m_delimiter,next_pos);
+			if (pos != std::string::npos)
+			{
+				re=str.substr(next_pos,pos-next_pos);
+				next_pos = pos + 1;
+			}
+			else
+			{
+				re = str.substr(next_pos);
+				next_pos = str.length() + 1;
+			}
+			if ((re.empty()) && (next_pos != str.length() + 1))
+			
+                        {    more = false;
+				throw str + "<-- ERROR: Token Failure";
+			}	
+                        if (m_widthField < re.length())
+				m_widthField = re.length();
+			more = next_pos <= str.length();
+		}
+		return re;
+}
+}

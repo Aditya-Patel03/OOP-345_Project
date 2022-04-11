@@ -1,0 +1,44 @@
+/* Name			: Nancy Soni
+Email: nhsoni@myseneca.ca
+Student ID : 166541193
+course : OOP345
+*/
+
+/*
+I have done all the coding by myself and only copied the code
+that my professor provided to complete my workshops and assignments.
+*/
+
+
+#ifndef STATION_H
+#define STATION_H
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+
+namespace sdds{
+const size_t WIDTH_CODE = 6u;
+	const size_t WIDTH_ID = 3u;
+
+class Station
+{
+	size_t d_identity;
+	std::string d_product;
+	std::string d_description;
+	size_t d_productnumber;
+	size_t d_amount;
+	static size_t m_widthField;
+	static size_t id_generator;
+public:
+	
+	size_t getQuantity() const;
+	void updateQuantity();
+	void display(std::ostream& os, bool full) const;
+	const std::string& getItemName() const;
+	size_t getNextSerialNumber();
+	Station(const std::string& src);
+};
+
+}
+#endif
